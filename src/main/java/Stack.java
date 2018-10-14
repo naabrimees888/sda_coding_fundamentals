@@ -1,32 +1,77 @@
+import java.util.Arrays;
+
 public class Stack {
-    private int[] storage;
-    private int top = -1;
+
+    private final int[] array;
+    private int sizeOfStack = 0;
 
     public Stack(int size) {
-        storage = new int[size];
+        array = new int[size];
     }
 
     public boolean isEmpty() {
-        return size() == 0;
+        return sizeOfStack == 0;
     }
 
     public void push(int value) {
-        if (top + 1 == storage.length){
+        if (isStackWillOverflow()) {
             throw new IllegalStateException("overflow");
         }
-        top++;
 
-        storage[top] = value;
+        increaseStackSize();
+        addValueToArray(value);
+
+    }
+
+    private boolean isStackWillOverflow() {
+        return sizeOfStack + 1 > array.length;
+    }
+
+    private int increaseStackSize() {
+        return sizeOfStack++;
+    }
+
+    private void addValueToArray(int value) {
+        array[getCurrentArrayIndex()] = value;
+    }
+
+    private int getCurrentArrayIndex() {
+        return sizeOfStack - 1;
     }
 
     public int pop() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new IllegalStateException("underflow");
         }
-        return storage[top--];
+
+        int value = getLastElement();
+        decreaseStackSize();
+        return value;
+    }
+
+    private int decreaseStackSize() {
+        return sizeOfStack--;
+    }
+
+    private int getLastElement() {
+        return array[getCurrentArrayIndex()];
     }
 
     public int size() {
-        return top + 1;
+        return sizeOfStack;
+    }
+
+    @Override
+    public String toString() {
+        String display = "";
+
+        for (int i = sizeOfStack -1; i >= 0; i--){
+            display = display + array[i];
+            if (i > 0){
+                display = display + " -> ";
+            }
+        }
+        display = display + " Stack size is " + sizeOfStack;
+        return display;
     }
 }
